@@ -2,5 +2,138 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
-  "projects": {}
+  "projects": {
+    "asoc-lib": {
+      "projectType": "library",
+      "root": "projects/asoc-lib",
+      "sourceRoot": "projects/asoc-lib/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/asoc-lib/tsconfig.lib.json",
+            "project": "projects/asoc-lib/ng-package.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/asoc-lib/tsconfig.lib.json",
+              "projects/asoc-lib/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "asoc-ui": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/asoc-ui",
+      "sourceRoot": "projects/asoc-ui/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/asoc-ui",
+            "index": "projects/asoc-ui/src/index.html",
+            "main": "projects/asoc-ui/src/main.ts",
+            "polyfills": "projects/asoc-ui/src/polyfills.ts",
+            "tsConfig": "projects/asoc-ui/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "projects/asoc-ui/src/favicon.ico",
+              "projects/asoc-ui/src/assets"
+            ],
+            "styles": [
+              "projects/asoc-ui/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/asoc-ui/src/environments/environment.ts",
+                  "with": "projects/asoc-ui/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "asoc-ui:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "asoc-ui:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "asoc-ui:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/asoc-ui/tsconfig.app.json",
+              "projects/asoc-ui/tsconfig.spec.json",
+              "projects/asoc-ui/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/asoc-ui/e2e/protractor.conf.js",
+            "devServerTarget": "asoc-ui:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "asoc-ui:serve:production"
+            }
+          }
+        }
+      }
+    }},
+  "defaultProject": "asoc-lib"
 }
